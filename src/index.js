@@ -10,11 +10,11 @@
   const zerosInFactorial = (item, double = false, odd = false) => {
     let count = 0;
     // const factor = double ? 10 : 5;
-    if (odd) {
-      item--;
-    } else if (double) {
-      item /= 2;
-    }
+    // if (odd) {
+    //   item--;
+    // } else if (double) {
+    //   item /= 2;
+    // }
     // item = double ? item / 2 : item;
     while (item > 0) {
       item = Math.floor(item / 5);
@@ -32,7 +32,7 @@
     if (isDouble(el)) {
       el = el.slice(0, -2);
       if (!isOdd(el)) {
-        zeroCount += zerosInFactorial(el, true);
+        zeroCount += zerosInFactorial(+el + 1, true);
       } else {
         zeroCount += zerosInFactorial(el, true, true);
       }
