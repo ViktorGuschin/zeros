@@ -1,4 +1,4 @@
-/*module.exports = */ function zeros(expression) {
+module.exports = function zeros(expression) {
   'use strict';
   const factorials = expression.split('*');
   let zeroCount = 0;
@@ -7,66 +7,44 @@
 
   const isOdd = item => item % 2 !== 0;
 
-  const zerosInFactorial = (item, double = false, odd = false) => {
-    function zeroCount(number) {
-      let resMax = 0;
-      let resMin = 0;
+  const isAllOdd = allFactorials => {
+    let countOdd = 0;
+    allFactorials.forEach(num => {
+      if (isDouble(num)) {
+        num = num.slice(0, -2);
+        if (isOdd(num)) {
+          countOdd++;
+        }
+      }
+    });
+    return countOdd;
+  };
 
-      let index = 5;
-      while (index <= number) {
-        resMax += Math.floor(number / index);
-        index *= 5;
-      }
-      index = 2;
-      while (index <= number) {
-        resMin += Math.floor(number / index);
-        index *= 2;
-      }
-      return Math.min(resMin, resMax);
-    }
+  if (isAllOdd(factorials) === factorials.length) {
+    return 0;
+  }
 
-    if (double) {
-      let count = 0;
-      for (let i = item; i >= 0; i = i - 2) {
-        count += zeroCount(i);
+  const getFactor = number => {
+    let power = [];
+
+    for (let p = 2; p <= number; ++p) {
+      if (number % p === 0) {
+        if (p === 5 || p === 10) power.push(p);
+        number = Math.floor(number / p);
+        p = 1;
       }
-      // if (odd) {
-      //   for (let i = 2; i <= item; i + 2) {
-      //     count += zeros(i);
-      //   }
-      // } else {
-      //   for (let i = 1; i <= item; i + 2) {
-      //     count += zeros(i);
-      //   }
-      // }
-      return count;
-    } else {
-      return zeros(item);
     }
+    return power.length;
   };
 
   factorials.forEach(el => {
-    // zeroCount += zerosInFactorial(
-    //   isDouble(el) ? el.slice(0, -2) : el.slice(0, -1),
-    //   isDouble(el),
-    //   !isOdd(el),
-    // );
-    if (isDouble(el)) {
-      el = el.slice(0, -2);
-      zeroCount += zerosInFactorial(el, true);
-      // if (!isOdd(el)) {
-      //   zeroCount += zerosInFactorial(el, true);
-      // } else {
-      //   zeroCount += zerosInFactorial(el, true, true);
-      // }
-    } else {
-      el = el.slice(0, -1);
-      zeroCount += zerosInFactorial(el);
+    let double = isDouble(el) ? 2 : 1;
+    el = el.slice(0, -double);
+    for (let i = el; i >= 1; i = i - double) {
+      let factor = getFactor(i);
+      zeroCount += factor > 0 ? factor : 0;
     }
   });
-  return zeroCount;
-}
 
-// zeros('1!!*2!!*3!!*4!!*5!!*6!!*7!!*8!!*9!!*10!!');
-// zeros('1!*2!*3!*4!*5!*6!*7!*8!*9!*10!');
-console.log(zeros('9!!*10!!*7!!'));
+  return zeroCount;
+};
